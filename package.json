@@ -1,5 +1,5 @@
 {
-  "name": "@tmcw/bespoke",
+  "name": "@ewenme/bespoke",
   "description": "custom image resizing and converting utility",
   "version": "1.0.3",
   "main": "index.js",

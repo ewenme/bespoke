@@ -23,13 +23,19 @@ const prefix = customPrefix
 fs.renameSync(process.argv[2], `${prefix}-${name}_original.jpg`);
 
 (async function () {
-  for (let res of [128, 640, 1280, 2880]) {
+  for (let res of [400, 1280, 2304]) {
     const jpgOutputFilename = `${prefix}-${name}_${res}.jpg`;
     const webpOutputFilename = `${prefix}-${name}_${res}.webp`;
 
-    await sharp(inputBuffer).resize(res).toFile(jpgOutputFilename);
+    const metadata = await sharp(inputBuffer).metadata();
 
-    await sharp(inputBuffer).resize(res).toFile(webpOutputFilename);
+    if (metadata.width > metadata.height) {
+      await sharp(inputBuffer).resize(res).toFile(jpgOutputFilename);
+      await sharp(inputBuffer).resize(res).toFile(webpOutputFilename);
+    } else {
+      await sharp(inputBuffer).resize(null, res).toFile(jpgOutputFilename);
+      await sharp(inputBuffer).resize(null, res).toFile(webpOutputFilename);
+    }
 
     console.log(
       `${res}x webp ${prettyBytes(
